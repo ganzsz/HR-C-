@@ -2,7 +2,11 @@
 
 #include <iostream>
 
+class Ray;
+
 class Vec3D {
+    friend Ray;
+
     public:
         Vec3D (float x, float y, float z);
         void show (std::string label);
