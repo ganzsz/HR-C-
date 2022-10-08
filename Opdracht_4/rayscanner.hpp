@@ -2,13 +2,17 @@
 
 #include <vector>
 
-#include "object.hpp"
+#include "floor.hpp"
+#include "sphere.hpp"
+#include "ray.hpp"
 
 class RayScanner {
     public:
-        void AddObject(Object object);
+        RayScanner(VPO ojb);
+        void AddFloor(Floor floor);
+        void AddSphere(Sphere Sphere);
         void scan();
 
     private:
-        std::vector<Object> objects;
+        VPO objects;
 };

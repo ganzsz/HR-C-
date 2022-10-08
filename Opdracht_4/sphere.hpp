@@ -8,7 +8,7 @@ class Sphere : public Object {
     public:
         Sphere (float x, float y, float z, float radius);
         float distFromRay (Ray const &ray) const;
-        bool hit (Ray const &ray) const;
+        bool hit(Ray &ray);
         Vec3D hitPoint (Ray const &ray) const;
         Vec3D getCenter() const;
         float getRadius() const;

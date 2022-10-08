@@ -7,7 +7,7 @@ class Object {
 
     public:
         Object (float x, float y, float z);
-        virtual bool hit (Ray &ray);
+        virtual bool hit (Ray &ray) = 0;
     
     protected:
         Vec3D center;

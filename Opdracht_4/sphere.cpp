@@ -10,13 +10,13 @@ float Sphere::distFromRay (Ray const &ray) const {
 }
 
 /* Return true if a ray intercepts a sphere */
-bool Sphere::hit (Ray const &ray) const {
+bool Sphere::hit (Ray &ray) {
     return distFromRay(ray) < radius;
 }
 
 /**
  * To know hitpoints we have the following functions:
- * - ray:    S + tD = P with Support and Direction aka the points on the ray
+ * - ray:    S + tD =  with Support and Direction aka the points on the ray
  *           and t, wich is a time component how far we are along the ray
  * - sphere: |P^2 - C^2| - R^2 = 0 with Points on the circle centered in C and Radius
  * These combined form |S + tD − C|^2 − R^2 = 0
