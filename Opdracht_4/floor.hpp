@@ -1,7 +1,6 @@
 #pragma once
 
 #include "object.hpp"
-#include "vector3d.hpp"
 
 class Floor : public Object {
     public:
@@ -9,7 +8,6 @@ class Floor : public Object {
         virtual bool hit (Ray &ray);
     
     private:
-        Vec3D normal;
         float squareSize;
 
 };

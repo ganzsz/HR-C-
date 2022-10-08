@@ -6,7 +6,7 @@
 #include <math.h>
 
 /* Create a floor specify the height and the size of a single square */
-Floor::Floor (float height, float squareSize) : Object(0, height, 0), normal(0,1,0), squareSize(squareSize) {};
+Floor::Floor (float height, float squareSize) : Object(0, height, 0), squareSize(squareSize) {};
 
 /**
  * 
@@ -15,10 +15,9 @@ Floor::Floor (float height, float squareSize) : Object(0, height, 0), normal(0,1
 bool Floor::hit(Ray &ray) {
     //the sceen is x,y depth = z
     if(ray.direction.y > center.y) return false;
-
-    auto dot = normal.dot(ray.direction);
+    auto dot = center.dot(ray.direction);
     auto w = ray.support.sub(center);
-    auto fac = -normal.dot(w)/dot;
+    auto fac = -center.dot(w)/dot;
     auto u = ray.direction.mul(fac);
     auto P = ray.support.add(u);
     /**
