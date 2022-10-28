@@ -12,7 +12,6 @@ typedef std::vector<Object*> VPO;
 class Ray {
     friend Sphere;
     friend Floor;
-    friend RayScanner;
     
     public:
         Ray (float xStart, float yStart, VPO &objects);
@@ -26,5 +25,4 @@ class Ray {
         VPO &objects;
         int bounces;
         float intensity;
-        Object* lastBounce;
 };

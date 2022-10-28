@@ -9,7 +9,6 @@ class Sphere : public Object {
         Sphere (float x, float y, float z, float radius);
         float distFromRay (Ray const &ray) const;
         bool hit(Ray &ray);
-        Vec3D hitPoint (Ray const &ray) const;
         bool hitPointTest (Ray const &ray, Vec3D *out);
         Vec3D getCenter() const;
         float getRadius() const;

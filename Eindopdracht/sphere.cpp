@@ -11,16 +11,16 @@ float Sphere::distFromRay (Ray const &ray) const {
 
 /* Return true if a ray intercepts a sphere */
 bool Sphere::hit (Ray &ray) {
-    if(ray.lastBounce != this && distFromRay(ray) < radius) {
-        Vec3D hitPoint = Vec3D(0,0,0);
-        
+    if(distFromRay(ray) < radius) {
+        Vec3D hitPoint;
         if(!hitPointTest(ray, &hitPoint)) return false;
-        
+
+        // Using the theory found on
+        // https://www.fabrizioduroni.it/2017/08/25/how-to-calculate-reflection-vector/
         auto normal = hitPoint.sub(center).unit();
         auto reflection = normal.mul(normal.dot(ray.direction)).mul(2).sub(ray.direction).mul(-1).unit();
         ray.direction=reflection;
         ray.support=hitPoint;
-        ray.lastBounce=this;
 
         return true;
     }
@@ -42,27 +42,15 @@ bool Sphere::hit (Ray &ray) {
  *  c = |S - C|^2 - R^2
  * What we are basically doing is translating the ray - C so we can pretend the
  * sphere is around the origin
+ * 
+ * We then check whether t0 is positive. If it is negative this means that the ray
+ * only has a backwards hit. This usually means that the support for a bounced off ray
+ * is juuust inside the sphere, so it will keep bouncing off itself then.
  */
 
-/* Return the point as a vector where a ray hits the outside of a sphere */
-Vec3D Sphere::hitPoint (const Ray &ray) const
-{
-    // L is the pretend ray moved relative with the sphere
-    auto L = ray.support.sub(center);
-    auto a = ray.direction.dot(ray.direction);
-    auto b = 2 * ray.direction.dot(L);
-    auto c = L.dot(L) - radius*radius;
-
-    float t0, t1;
-    if(!solveQuadratic(a, b, c, t0, t1))
-        throw std::logic_error("The ray and sphere don't intersect in Sphere::hitPoint");
-
-    if(ray.bounces == 0 && t0 < 0) throw std::logic_error("The object is behind the person. This should not be the case in Sphere::hitPoint");
-
-    // Fill in the point we found in the ray equation to find the intersection point
-    return ray.support.add(ray.direction.mul(t0));
-};
-
+/** out becomes the point as a vector where a ray hits the outside of a sphere 
+ * returns whether t0 is positive
+ */
 bool Sphere::hitPointTest (Ray const &ray, Vec3D *out) {
     // L is the pretend ray moved relative with the sphere
     auto L = ray.support.sub(center);
@@ -74,7 +62,7 @@ bool Sphere::hitPointTest (Ray const &ray, Vec3D *out) {
     if(!solveQuadratic(a, b, c, t0, t1))
         throw std::logic_error("The ray and sphere don't intersect in Sphere::hitPoint");
 
-    if(ray.bounces == 0 && t0 < 0) throw std::logic_error("The object is behind the person. This should not be the case in Sphere::hitPoint");
+    if(ray.bounces == 0 && t0 < 0) throw std::logic_error("The object is behind the person. This should not be the case. in Sphere::hitPoint");
 
     // Fill in the point we found in the ray equation to find the intersection point
     *out = ray.support.add(ray.direction.mul(t0));

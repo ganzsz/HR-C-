@@ -9,8 +9,6 @@
 class RayScanner {
     public:
         RayScanner(VPO ojb);
-        void AddFloor(Floor floor);
-        void AddSphere(Sphere Sphere);
         void scan();
 
     private:

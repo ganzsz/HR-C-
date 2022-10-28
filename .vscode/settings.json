@@ -1,4 +1,5 @@
 {
+    "terminal.integrated.fontSize": 6,
     "files.associations": {
         "array": "cpp",
         "atomic": "cpp",

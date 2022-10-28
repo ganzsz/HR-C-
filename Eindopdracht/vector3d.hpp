@@ -12,6 +12,7 @@ class Vec3D {
     friend Object;
 
     public:
+        Vec3D ();
         Vec3D (float x, float y, float z);
         void show (std::string label);
         Vec3D minus () const;
