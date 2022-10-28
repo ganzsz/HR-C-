@@ -11,7 +11,21 @@ float Sphere::distFromRay (Ray const &ray) const {
 
 /* Return true if a ray intercepts a sphere */
 bool Sphere::hit (Ray &ray) {
-    return distFromRay(ray) < radius;
+    if(ray.lastBounce != this && distFromRay(ray) < radius) {
+        Vec3D hitPoint = Vec3D(0,0,0);
+        
+        if(!hitPointTest(ray, &hitPoint)) return false;
+        
+        auto normal = hitPoint.sub(center).unit();
+        auto reflection = normal.mul(normal.dot(ray.direction)).mul(2).sub(ray.direction).mul(-1).unit();
+        ray.direction=reflection;
+        ray.support=hitPoint;
+        ray.lastBounce=this;
+
+        return true;
+    }
+    else
+        return false;
 }
 
 /**
@@ -43,11 +57,29 @@ Vec3D Sphere::hitPoint (const Ray &ray) const
     if(!solveQuadratic(a, b, c, t0, t1))
         throw std::logic_error("The ray and sphere don't intersect in Sphere::hitPoint");
 
-    // if(t0 < 0) throw std::logic_error("The object is behind the person. This should not be the case in Sphere::hitPoint");
+    if(ray.bounces == 0 && t0 < 0) throw std::logic_error("The object is behind the person. This should not be the case in Sphere::hitPoint");
 
     // Fill in the point we found in the ray equation to find the intersection point
     return ray.support.add(ray.direction.mul(t0));
 };
+
+bool Sphere::hitPointTest (Ray const &ray, Vec3D *out) {
+    // L is the pretend ray moved relative with the sphere
+    auto L = ray.support.sub(center);
+    auto a = ray.direction.dot(ray.direction);
+    auto b = 2 * ray.direction.dot(L);
+    auto c = L.dot(L) - radius*radius;
+
+    float t0, t1;
+    if(!solveQuadratic(a, b, c, t0, t1))
+        throw std::logic_error("The ray and sphere don't intersect in Sphere::hitPoint");
+
+    if(ray.bounces == 0 && t0 < 0) throw std::logic_error("The object is behind the person. This should not be the case in Sphere::hitPoint");
+
+    // Fill in the point we found in the ray equation to find the intersection point
+    *out = ray.support.add(ray.direction.mul(t0));
+    return t0 > 0;
+}
 
 // Getters for debugging mainly 
 Vec3D Sphere::getCenter() const { return center; }

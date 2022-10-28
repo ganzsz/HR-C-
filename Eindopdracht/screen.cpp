@@ -23,12 +23,14 @@ void Screen::updatePixelIntensity(int x, int y, float fraction) {
     if (y >= screen.size()) throw std::invalid_argument("x is too high in Screen::updatePixelIntensity value:"+x);
     if (x >= screen[0].size()) throw std::invalid_argument("y is too high in Screen::updatePixelIntensity value:"+y);
 
-    screen[y][x] /= fraction;
+    screen[y][x] = 1 - fraction;
 }
 
 const auto CHARACTERS = std::vector<char> {'M', 'N', 'O', 'L', 'I', '\\', ':', ' '};
+// const auto CHARACTERS = std::vector<char> {'9', '8', '7', '6', '5', '4', '3','2','1',' '};
 char getCharFromDepth(float f) {
-    if (f == 1) return CHARACTERS.back();
+    // return (int)f + 48;
+    if (f >= 1) return CHARACTERS.back();
 
     return CHARACTERS[std::floor((CHARACTERS.size() - 1) * (f))];
 
