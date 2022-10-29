@@ -42,10 +42,10 @@ bool Floor::hit(Ray &ray) {
     if(ray.bounces == 0 && ray.direction.y > -0.1) return false;
 
     auto dot = center.dot(ray.direction);
-    auto w = ray.support.sub(center);
+    auto w = ray.support - center;
     auto fac = -center.dot(w)/dot;
-    auto u = ray.direction.mul(fac);
-    auto P = ray.support.add(u);
+    auto u = ray.direction * fac;
+    auto P = ray.support + u;
 
     auto hit = P.x > 0
         ? (int)floor(abs(P.z)/squareSize) % 2 == (int)floor(abs(P.x)/squareSize) % 2
@@ -54,7 +54,7 @@ bool Floor::hit(Ray &ray) {
     if(hit) {
         // This is a quick way to make sure no other hits will happen for this ray.
         // We just make a ray pointing down from the floor.
-        ray.support = center.add(Vec3D(0, -0.5, 0));
+        ray.support = center + Vec3D(0, -0.5, 0);
         ray.direction = Vec3D(0,-1,0);
         ray.intensity = 1;
     }

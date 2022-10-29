@@ -11,7 +11,7 @@ auto EYE = Vec3D(0,0,-3);
 
 // Create a ray from the eye to a defined point on the screen
 Ray::Ray (float xStart, float yStart, VPO &objects) :
-    objects(objects), support(EYE), direction(Vec3D(xStart, yStart, 0).sub(EYE).unit()), bounces(0), intensity(1) { }
+    objects(objects), support(EYE), direction((Vec3D(xStart, yStart, 0) - EYE).unit()), bounces(0), intensity(1) { }
 
 /** 
  * Recursively scans the objects for hits.
