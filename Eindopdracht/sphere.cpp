@@ -18,7 +18,7 @@ bool Sphere::hit (Ray &ray) {
         // Using the theory found on
         // https://www.fabrizioduroni.it/2017/08/25/how-to-calculate-reflection-vector/
         auto normal = (hitPoint - center).unit();
-        auto reflection = (normal * (normal.dot(ray.direction)) * 2 - ray.direction).negate().unit();
+        auto reflection = -(normal * (normal ^ ray.direction) * 2 - ray.direction).unit();
         ray.direction=reflection;
         ray.support=hitPoint;
 
@@ -54,9 +54,9 @@ bool Sphere::hit (Ray &ray) {
 bool Sphere::hitPointTest (Ray const &ray, Vec3D *out) {
     // L is the pretend ray moved relative with the sphere
     auto L = ray.support - center;
-    auto a = ray.direction.dot(ray.direction);
-    auto b = 2 * ray.direction.dot(L);
-    auto c = L.dot(L) - radius*radius;
+    auto a = ray.direction ^ (ray.direction);
+    auto b = 2 * (ray.direction ^ L);
+    auto c = (L^L) - radius*radius;
 
     float t0, t1;
     if(!solveQuadratic(a, b, c, t0, t1))

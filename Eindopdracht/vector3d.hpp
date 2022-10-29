@@ -20,7 +20,7 @@ class Vec3D {
         Vec3D add (Vec3D const &other) const; //
         Vec3D sub (Vec3D const &other) const; //
         Vec3D mul (float scalar) const; //
-        Vec3D div (float scalar) const;
+        Vec3D div (float scalar) const; //
         float norm () const;
         Vec3D unit () const;
         float dot (Vec3D const &other) const;
@@ -28,9 +28,13 @@ class Vec3D {
 
         Vec3D operator + (Vec3D const &other) const { return this->add(other); };
         Vec3D operator - (Vec3D const &other) const { return this->sub(other); };
+        Vec3D operator - () const { return this->negate(); };
         Vec3D operator * (float const &other) const { return this->mul(other); };
+        // Cross product
         Vec3D operator * (Vec3D const &other) const { return this->cross(other); };
         Vec3D operator / (float const &other) const { return this->div(other); };
+        // Dot product
+        float operator ^ (Vec3D const &other) const { return this->dot(other); };
     
     protected:
         float x, y, z;

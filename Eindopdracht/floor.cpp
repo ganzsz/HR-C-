@@ -41,9 +41,9 @@ bool Floor::hit(Ray &ray) {
     //we don't want to show the floor up to the horizon which is halfway up the screen
     if(ray.bounces == 0 && ray.direction.y > -0.1) return false;
 
-    auto dot = center.dot(ray.direction);
+    auto dot = center ^ (ray.direction);
     auto w = ray.support - center;
-    auto fac = -center.dot(w)/dot;
+    auto fac = - center ^ w / dot;
     auto u = ray.direction * fac;
     auto P = ray.support + u;
 
