@@ -6,7 +6,7 @@ Sphere::Sphere (float x, float y, float z, float radius):
 
 /* Return a scalar with the minimum distance that a ray has from the center of the sphere */
 float Sphere::distFromRay (Ray const &ray) const {
-    return ray.support.sub(center).cross(ray.direction).norm();
+    return ((ray.support - center) * ray.direction).norm();
 }
 
 /* Return true if a ray intercepts a sphere */
@@ -17,8 +17,8 @@ bool Sphere::hit (Ray &ray) {
 
         // Using the theory found on
         // https://www.fabrizioduroni.it/2017/08/25/how-to-calculate-reflection-vector/
-        auto normal = hitPoint.sub(center).unit();
-        auto reflection = normal.mul(normal.dot(ray.direction)).mul(2).sub(ray.direction).mul(-1).unit();
+        auto normal = (hitPoint - center).unit();
+        auto reflection = -(normal * (normal ^ ray.direction) * 2 - ray.direction).unit();
         ray.direction=reflection;
         ray.support=hitPoint;
 
@@ -53,10 +53,10 @@ bool Sphere::hit (Ray &ray) {
  */
 bool Sphere::hitPointTest (Ray const &ray, Vec3D *out) {
     // L is the pretend ray moved relative with the sphere
-    auto L = ray.support.sub(center);
-    auto a = ray.direction.dot(ray.direction);
-    auto b = 2 * ray.direction.dot(L);
-    auto c = L.dot(L) - radius*radius;
+    auto L = ray.support - center;
+    auto a = ray.direction ^ (ray.direction);
+    auto b = 2 * (ray.direction ^ L);
+    auto c = (L^L) - radius*radius;
 
     float t0, t1;
     if(!solveQuadratic(a, b, c, t0, t1))
@@ -65,7 +65,7 @@ bool Sphere::hitPointTest (Ray const &ray, Vec3D *out) {
     if(ray.bounces == 0 && t0 < 0) throw std::logic_error("The object is behind the person. This should not be the case. in Sphere::hitPoint");
 
     // Fill in the point we found in the ray equation to find the intersection point
-    *out = ray.support.add(ray.direction.mul(t0));
+    *out = ray.direction * t0 + ray.support;
     return t0 > 0;
 }
 

@@ -2,11 +2,11 @@
 
 #include "vector3d.hpp"
 
-Vec3D::Vec3D ():
-    x(0), y(0), z(0) { }
+Vec3D::Vec3D (): x(0), y(0), z(0) { }
 
-Vec3D::Vec3D (float x, float y, float z):
-    x(x), y(y), z(z) { }
+Vec3D::Vec3D (const Vec3D &cp): x(cp.x), y(cp.y), z(cp.z) { }
+
+Vec3D::Vec3D (float x, float y, float z): x(x), y(y), z(z) { }
 
 void Vec3D::show (std::string label) {
     std::cout << label << "\t " << x << "\t "<< y << "\t " << z << std::endl;
@@ -14,7 +14,7 @@ void Vec3D::show (std::string label) {
 
 
 /* returns a new negative vector */
-Vec3D Vec3D::minus () const {
+Vec3D Vec3D::negate () const {
     return Vec3D(-x, -y, -z);
 }
 
@@ -29,7 +29,7 @@ Vec3D Vec3D::add (Vec3D const &other) const {
 
 /* returns this-other as a new vector */
 Vec3D Vec3D::sub (Vec3D const &other) const {
-    return add(other.minus());
+    return add(other.negate());
 }
 
 /* returns this*scalar as a new vector */
